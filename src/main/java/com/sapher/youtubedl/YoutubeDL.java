@@ -67,8 +67,8 @@ public class YoutubeDL {
         YoutubeDLResponse youtubeDLResponse;
         Process process;
         int exitCode;
-        StringBuffer outBuffer = new StringBuffer(); //stdout
-        StringBuffer errBuffer = new StringBuffer(); //stderr
+        StringBuilder outBuffer = new StringBuilder(); //stdout
+        StringBuilder errBuffer = new StringBuilder(); //stderr
         long startTime = System.nanoTime();
 
         String[] split = command.split(" ");
@@ -105,9 +105,10 @@ public class YoutubeDL {
         String out = outBuffer.toString();
         String err = errBuffer.toString();
 
-        if(exitCode > 0) {
-            throw new YoutubeDLException(err);
-        }
+        // we want response even though youtube-dl fails, so we can do our workaround
+//        if(exitCode > 0) {
+//            throw new YoutubeDLException(err);
+//        }
 
         int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
 

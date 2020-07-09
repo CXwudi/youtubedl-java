@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 public class StreamProcessExtractor extends Thread {
     private InputStream stream;
-    private StringBuffer buffer;
+    private StringBuilder buffer;
     private final LineOutputCallback callback;
 
-    public StreamProcessExtractor(StringBuffer buffer, InputStream stream, LineOutputCallback callback) {
+    public StreamProcessExtractor(StringBuilder buffer, InputStream stream, LineOutputCallback callback) {
         this.stream = stream;
         this.buffer = buffer;
         this.callback = callback;

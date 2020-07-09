@@ -25,6 +25,10 @@ public class YoutubeDLResponse {
         this.err = err;
     }
 
+    public boolean isSuccess(){
+        return exitCode <= 0;
+    }
+
     public String getCommand() {
         return command;
     }

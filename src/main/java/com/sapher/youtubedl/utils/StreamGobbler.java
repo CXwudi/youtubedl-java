@@ -6,9 +6,9 @@ import java.io.InputStream;
 public class StreamGobbler extends Thread {
 
     private InputStream stream;
-    private StringBuffer buffer;
+    private StringBuilder buffer;
 
-    public StreamGobbler(StringBuffer buffer, InputStream stream) {
+    public StreamGobbler(StringBuilder buffer, InputStream stream) {
         this.stream = stream;
         this.buffer = buffer;
         start();
