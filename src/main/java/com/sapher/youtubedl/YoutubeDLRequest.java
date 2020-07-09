@@ -59,7 +59,7 @@ public class YoutubeDLRequest {
         return this;
     }
 
-    public YoutubeDLRequest setOption(Map<String, String> options) {
+    public YoutubeDLRequest setOptions(Map<String, String> options) {
         this.options.putAll(options);
         return this;
     }

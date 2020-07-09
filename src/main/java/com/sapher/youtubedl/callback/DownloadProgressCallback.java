@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * A special {@link LineOutputCallback} that use regax to parse youtube-dl progress,
  * and nicely output it base on user code
- * @author
+ * @author sapher
  * @co-author CX无敌
  */
 @FunctionalInterface

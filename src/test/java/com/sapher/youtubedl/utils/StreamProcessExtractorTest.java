@@ -14,7 +14,7 @@ public class StreamProcessExtractorTest {
   public void testNormalFunctionality() throws YoutubeDLException {
     YoutubeDLRequest request = new YoutubeDLRequest();
     request.setOption("verbose").setOption("help");
-    YoutubeDL.setExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
+    //YoutubeDL.setExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
 
     YoutubeDLResponse response = YoutubeDL.execute(request, System.out::println, System.out::println);
     System.out.println(response.getOut());
