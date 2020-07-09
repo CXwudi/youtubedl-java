@@ -1,6 +1,4 @@
-# youtubedl-java
-
-[![Build Status](https://travis-ci.org/sapher/youtubedl-java.svg?branch=master)](https://travis-ci.org/sapher/youtubedl-java) <-- for main stream youtubedl-java
+# youtubedl-java [![](https://jitpack.io/v/CXwudi/youtubedl-java.svg)](https://jitpack.io/#CXwudi/youtubedl-java)
 
 A simple java wrapper for [youtube-dl](https://github.com/rg3/youtube-dl) executable
 
