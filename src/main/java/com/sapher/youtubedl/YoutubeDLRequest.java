@@ -26,32 +26,42 @@ public class YoutubeDLRequest {
         return directory;
     }
 
-    public void setDirectory(String directory) {
+    public YoutubeDLRequest setDirectory(String directory) {
         this.directory = directory;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public YoutubeDLRequest setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     public Map<String, String> getOption() {
         return options;
     }
 
-    public void setOption(String key) {
+    public YoutubeDLRequest setOption(String key) {
         options.put(key, null);
+        return this;
     }
 
-    public void setOption(String key, String value) {
+    public YoutubeDLRequest setOption(String key, String value) {
         options.put(key, value);
+        return this;
     }
 
-    public void setOption(String key, int value) {
+    public YoutubeDLRequest setOption(String key, int value) {
         options.put(key, String.valueOf(value));
+        return this;
+    }
+
+    public YoutubeDLRequest setOption(Map<String, String> options) {
+        this.options.putAll(options);
+        return this;
     }
 
     /**

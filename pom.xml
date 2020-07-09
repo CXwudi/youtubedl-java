@@ -49,4 +49,16 @@
             <version>${jackson.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin> <!-- only need this to compiling high version java like 11 or higher -->
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version> <!-- higher version support higher java -->
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

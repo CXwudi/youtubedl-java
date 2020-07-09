@@ -1,6 +1,8 @@
 package com.sapher.youtubedl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sapher.youtubedl.callback.DownloadProgressCallback;
+import com.sapher.youtubedl.callback.LineOutputCallback;
 import com.sapher.youtubedl.mapper.VideoFormat;
 import com.sapher.youtubedl.mapper.VideoInfo;
 import com.sapher.youtubedl.mapper.VideoThumbnail;
@@ -44,17 +46,19 @@ public class YoutubeDL {
      * @throws YoutubeDLException
      */
     public static YoutubeDLResponse execute(YoutubeDLRequest request) throws YoutubeDLException {
-        return execute(request, null);
+        return execute(request, null, null);
     }
 
     /**
      * Execute youtube-dl request
      * @param request request object
-     * @param callback callback
+     * @param stdOutCallback stdOutCallback
      * @return response object
      * @throws YoutubeDLException
      */
-    public static YoutubeDLResponse execute(YoutubeDLRequest request, DownloadProgressCallback callback) throws YoutubeDLException {
+    public static YoutubeDLResponse execute(YoutubeDLRequest request,
+                                            LineOutputCallback stdOutCallback,
+                                            LineOutputCallback stdErrCallback) throws YoutubeDLException {
 
         String command = buildCommand(request.buildOptions());
         String directory = request.getDirectory();
@@ -72,8 +76,9 @@ public class YoutubeDL {
         ProcessBuilder processBuilder = new ProcessBuilder(split);
 
         // Define directory if one is passed
-        if(directory != null)
+        if(directory != null) {
             processBuilder.directory(new File(directory));
+        }
 
         try {
             process = processBuilder.start();
@@ -84,8 +89,8 @@ public class YoutubeDL {
         InputStream outStream = process.getInputStream();
         InputStream errStream = process.getErrorStream();
 
-        StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, callback);
-        StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
+        StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, stdOutCallback);
+        StreamProcessExtractor stdErrProcessor = new StreamProcessExtractor(errBuffer, errStream, stdErrCallback);
 
         try {
             stdOutProcessor.join();

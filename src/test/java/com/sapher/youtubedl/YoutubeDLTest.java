@@ -14,6 +14,9 @@ public class YoutubeDLTest {
     private final static String VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
     private final static String NONE_EXISTENT_VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcZ";
 
+//    static {
+//        YoutubeDL.setExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
+//    }
     /**@Test
     public void testUsingOwnExecutablePath() throws YoutubeDLException {
         YoutubeDL.setExecutablePath("/usr/bin/youtube-dl");
