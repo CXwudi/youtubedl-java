@@ -1,0 +1,3 @@
+# telling jitpack to use java 11
+jdk:
+  - openjdk11
