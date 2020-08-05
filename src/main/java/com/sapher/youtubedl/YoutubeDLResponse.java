@@ -13,7 +13,7 @@ public class YoutubeDLResponse {
     private String out;
     private String err;
     private String directory;
-    private int elapsedTime;
+    private int elapsedTime;    // in millisecond
 
     public YoutubeDLResponse(String command, Map<String, String> options, String directory, int exitCode, int elapsedTime, String out, String err) {
         this.command = command;

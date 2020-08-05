@@ -14,14 +14,25 @@ public class YoutubeDLTest {
     private final static String VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
     private final static String NONE_EXISTENT_VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcZ";
 
-//    static {
-//        YoutubeDL.setExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
-//    }
+    static {
+        YoutubeDL.setDefaultExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
+    }
     /**@Test
     public void testUsingOwnExecutablePath() throws YoutubeDLException {
         YoutubeDL.setExecutablePath("/usr/bin/youtube-dl");
         Assert.assertNotNull(YoutubeDL.getVersion());
     }**/
+//
+//    @Test
+//    public void testUsingOwnExecutablePathForOneRequest() throws YoutubeDLException {
+//        YoutubeDLRequest request = new YoutubeDLRequest();
+//        request.setOption("version");
+//        request.setYoutubedlPath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
+//        String version = YoutubeDL.execute(request).getOut();
+//        Assert.assertNotNull(version);
+//        Assert.assertTrue(version.length() > 0);
+//        Assert.assertEquals("youtube-dl", YoutubeDL.getDefaultExecutablePath());
+//    }
 
     @Test
     public void testGetVersion() throws YoutubeDLException {
@@ -37,7 +48,7 @@ public class YoutubeDLTest {
         request.setOption("version");
         YoutubeDLResponse response = YoutubeDL.execute(request);
 
-        int elapsedTime = (int) (System.nanoTime() - startTime);
+        int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
 
         Assert.assertTrue(elapsedTime > response.getElapsedTime());
     }

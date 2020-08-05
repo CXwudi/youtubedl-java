@@ -18,9 +18,17 @@ public class YoutubeDLRequest {
     private String url;
 
     /**
+     * The customized youtube-dl executable path for this request only, default is {@code null}.
+     * When calling {@link YoutubeDLRequest#buildCommand()},
+     * {@code null} will be replaced by {@link YoutubeDL#getDefaultExecutablePath()}.
+     * Otherwise, it stay the same
+     */
+    private String youtubedlPath;
+
+    /**
      * List of executable options
      */
-    private Map<String, String> options = new HashMap<String, String>();
+    private Map<String, String> options = new HashMap<>();
 
     public String getDirectory() {
         return directory;
@@ -37,6 +45,15 @@ public class YoutubeDLRequest {
 
     public YoutubeDLRequest setUrl(String url) {
         this.url = url;
+        return this;
+    }
+
+    public String getYoutubedlPath() {
+        return youtubedlPath;
+    }
+
+    public YoutubeDLRequest setYoutubedlPath(String youtubedlPath) {
+        this.youtubedlPath = youtubedlPath;
         return this;
     }
 
@@ -68,7 +85,7 @@ public class YoutubeDLRequest {
      * Constructor
      */
     public YoutubeDLRequest() {
-
+        this(null);
     }
 
     /**
@@ -76,7 +93,7 @@ public class YoutubeDLRequest {
      * @param url
      */
     public YoutubeDLRequest(String url) {
-        this.url = url;
+        this(url, null);
     }
 
     /**
@@ -85,29 +102,41 @@ public class YoutubeDLRequest {
      * @param directory
      */
     public YoutubeDLRequest(String url, String directory) {
+        this(url, directory, null);
+    }
+
+    public YoutubeDLRequest(String url, String directory, String youtubedlPath) {
         this.url = url;
         this.directory = directory;
+        this.youtubedlPath = youtubedlPath;
     }
 
     /**
-     * Transform options to a string that the executable will execute
+     * Transform options to a string and build a completed working command line
      * @return Command string
      */
-    protected String buildOptions() {
+    public String buildCommand() {
 
         StringBuilder builder = new StringBuilder();
+
+        // Set youtube-dl exe
+        if (youtubedlPath != null)
+            builder.append(youtubedlPath + " ");
+        else
+            builder.append(YoutubeDL.getDefaultExecutablePath() + " ");
+
 
         // Set Url
         if(url != null)
             builder.append(url + " ");
 
         // Build options strings
-        Iterator it = options.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> it = options.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry option = (Map.Entry) it.next();
+            Map.Entry<String, String> option = it.next();
 
-            String name = (String) option.getKey();
-            String value = (String) option.getValue();
+            String name = option.getKey();
+            String value = option.getValue();
 
             if(value == null) value = "";
 

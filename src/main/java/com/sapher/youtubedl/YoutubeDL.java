@@ -1,12 +1,10 @@
 package com.sapher.youtubedl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sapher.youtubedl.callback.DownloadProgressCallback;
 import com.sapher.youtubedl.callback.LineOutputCallback;
 import com.sapher.youtubedl.mapper.VideoFormat;
 import com.sapher.youtubedl.mapper.VideoInfo;
 import com.sapher.youtubedl.mapper.VideoThumbnail;
-import com.sapher.youtubedl.utils.StreamGobbler;
 import com.sapher.youtubedl.utils.StreamProcessExtractor;
 
 import java.io.File;
@@ -26,18 +24,10 @@ import java.util.Map;
 public class YoutubeDL {
 
     /**
-     * Youtube-dl executable name
+     * By default this is Youtube-dl executable name.
+     * Assuming youtube-dl executable is in the PATH
      */
-    protected static String executablePath = "youtube-dl";
-
-    /**
-     * Append executable name to command
-     * @param command Command string
-     * @return Command string
-     */
-    protected static String buildCommand(String command) {
-        return String.format("%s %s", executablePath, command);
-    }
+    protected static String defaultExecutablePath = "youtube-dl";
 
     /**
      * Execute youtube-dl request
@@ -60,7 +50,7 @@ public class YoutubeDL {
                                             LineOutputCallback stdOutCallback,
                                             LineOutputCallback stdErrCallback) throws YoutubeDLException {
 
-        String command = buildCommand(request.buildOptions());
+        String command = request.buildCommand();
         String directory = request.getDirectory();
         Map<String, String> options = request.getOption();
 
@@ -204,15 +194,15 @@ public class YoutubeDL {
      * Get command executable or path to the executable
      * @return path string
      */
-    public static String getExecutablePath(){
-        return executablePath;
+    public static String getDefaultExecutablePath(){
+        return defaultExecutablePath;
     }
 
     /**
      * Set path to use for the command
      * @param path String path to the executable
      */
-    public static void setExecutablePath(String path){
-        executablePath = path;
+    public static void setDefaultExecutablePath(String path){
+        defaultExecutablePath = path;
     }
 }
