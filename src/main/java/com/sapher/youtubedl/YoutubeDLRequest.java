@@ -62,12 +62,21 @@ public class YoutubeDLRequest {
     }
 
     public YoutubeDLRequest setOption(String key) {
-        options.put(key, null);
+        setOption(key, null);
         return this;
     }
 
+    /**
+     * set the option, if value is empty string after striped,
+     * then {@link YoutubeDLRequest#setOption(String)} is used
+     * @return {@code this}
+     */
     public YoutubeDLRequest setOption(String key, String value) {
-        options.put(key, value);
+        if (value == null || "".equals(value.strip())){
+            options.put(key, null);
+        } else {
+            options.put(key, value);
+        }
         return this;
     }
 
@@ -76,8 +85,20 @@ public class YoutubeDLRequest {
         return this;
     }
 
+    /**
+     * set options from a map of options <br/>
+     * if the map contains {@code ""} or {@code null} in keys,
+     * then such key-value pair is ignored
+     * @param options users' options map
+     * @return {@code this}
+     */
     public YoutubeDLRequest setOptions(Map<String, String> options) {
-        this.options.putAll(options);
+        for (var entry : options.entrySet()){
+            String key = entry.getKey();
+            if (key != null && !"".equals(key.strip())) {
+                setOption(key, entry.getValue());
+            }
+        }
         return this;
     }
 
@@ -115,20 +136,26 @@ public class YoutubeDLRequest {
      * Transform options to a string and build a completed working command line
      * @return Command string
      */
-    public String buildCommand() {
+    public String[] buildCommand() {
 
-        StringBuilder builder = new StringBuilder();
+        List<String> builder = new LinkedList<>();
 
         // Set youtube-dl exe
-        if (youtubedlPath != null)
-            builder.append(youtubedlPath + " ");
-        else
-            builder.append(YoutubeDL.getDefaultExecutablePath() + " ");
+        String executablePath;
+        if (youtubedlPath != null) {
+            executablePath = youtubedlPath;
+        } else {
 
+            executablePath = YoutubeDL.getDefaultExecutablePath();
+        }
+
+        // consider user might set executable path like "python.exe youtube_dl/__main__.py"
+        builder.addAll(Arrays.asList(executablePath.split(" ")));
 
         // Set Url
-        if(url != null)
-            builder.append(url + " ");
+        if(url != null) {
+            builder.add(url);
+        }
 
         // Build options strings
         Iterator<Map.Entry<String, String>> it = options.entrySet().iterator();
@@ -138,14 +165,14 @@ public class YoutubeDLRequest {
             String name = option.getKey();
             String value = option.getValue();
 
-            if(value == null) value = "";
-
-            String optionFormatted = String.format("--%s %s", name, value).trim();
-            builder.append(optionFormatted + " ");
+            builder.add(name);
+            if(value != null && !"".equals(value)) {
+                builder.add(value);
+            }
 
             it.remove();
         }
 
-        return builder.toString().trim();
+        return builder.toArray(new String[0]);
     }
 }

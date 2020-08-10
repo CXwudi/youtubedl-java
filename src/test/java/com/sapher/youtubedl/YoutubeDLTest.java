@@ -3,9 +3,14 @@ package com.sapher.youtubedl;
 import com.sapher.youtubedl.mapper.VideoFormat;
 import com.sapher.youtubedl.mapper.VideoInfo;
 import com.sapher.youtubedl.mapper.VideoThumbnail;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Assert;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class YoutubeDLTest {
@@ -14,25 +19,14 @@ public class YoutubeDLTest {
     private final static String VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
     private final static String NONE_EXISTENT_VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcZ";
 
-    static {
-        YoutubeDL.setDefaultExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
+    /**
+     * modify this to make test case running
+     */
+    @Before
+    public void setDefaultExe() {
+        //YoutubeDL.setDefaultExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
+        YoutubeDL.setDefaultExecutablePath("python D:\\11134\\Videos\\youtube-dl-niconico-enhanced\\youtube_dl/__main__.py");
     }
-    /**@Test
-    public void testUsingOwnExecutablePath() throws YoutubeDLException {
-        YoutubeDL.setExecutablePath("/usr/bin/youtube-dl");
-        Assert.assertNotNull(YoutubeDL.getVersion());
-    }**/
-//
-//    @Test
-//    public void testUsingOwnExecutablePathForOneRequest() throws YoutubeDLException {
-//        YoutubeDLRequest request = new YoutubeDLRequest();
-//        request.setOption("version");
-//        request.setYoutubedlPath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
-//        String version = YoutubeDL.execute(request).getOut();
-//        Assert.assertNotNull(version);
-//        Assert.assertTrue(version.length() > 0);
-//        Assert.assertEquals("youtube-dl", YoutubeDL.getDefaultExecutablePath());
-//    }
 
     @Test
     public void testGetVersion() throws YoutubeDLException {
@@ -45,12 +39,12 @@ public class YoutubeDLTest {
         long startTime = System.nanoTime();
 
         YoutubeDLRequest request = new YoutubeDLRequest();
-        request.setOption("version");
+        request.setOption("--version");
         YoutubeDLResponse response = YoutubeDL.execute(request);
 
         int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
-
-        Assert.assertTrue(elapsedTime > response.getElapsedTime());
+        System.out.println("wrapped elapsedTime = " + elapsedTime + ", real elapsedTime = " + response.getElapsedTime());
+        Assert.assertTrue(elapsedTime >= response.getElapsedTime());
     }
 
 
@@ -59,18 +53,21 @@ public class YoutubeDLTest {
 
         YoutubeDLRequest request = new YoutubeDLRequest();
         request.setUrl(VIDEO_URL);
-        request.setOption("simulate");
+        request.setOption("--simulate");
 
         YoutubeDLResponse response = YoutubeDL.execute(request);
 
-        Assert.assertEquals("youtube-dl " + VIDEO_URL + " --simulate", response.getCommand());
+        List<String> expectedCmd = new ArrayList<>(Arrays.asList(YoutubeDL.getDefaultExecutablePath().split(" ")));
+        expectedCmd.add(VIDEO_URL);
+        expectedCmd.add("--simulate");
+        Assert.assertArrayEquals(expectedCmd.toArray(), response.getCommand());
     }
 
     @Test
     public void testDirectory() throws YoutubeDLException {
 
         YoutubeDLRequest request = new YoutubeDLRequest(VIDEO_URL, DIRECTORY);
-        request.setOption("simulate");
+        request.setOption("--simulate");
 
         YoutubeDLResponse response = YoutubeDL.execute(request);
 

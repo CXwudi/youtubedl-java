@@ -18,6 +18,13 @@ public interface DownloadProgressCallback extends LineOutputCallback{
 
     void onProgressUpdate(float progress, long etaInSeconds);
 
+    /**
+     * overrided the {@link LineOutputCallback#handleThisLine(String)} to
+     * extract out the progress number and estimated time left, and pass these numbers
+     * to {@link DownloadProgressCallback#onProgressUpdate(float, long)} which is what user
+     * is implementing
+     * @param line a youtube-dl console output line
+     */
     @Override
     default void handleThisLine(String line){
         Matcher m = p.matcher(line);

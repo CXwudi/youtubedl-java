@@ -8,14 +8,14 @@ import java.util.Map;
 public class YoutubeDLResponse {
 
     private Map<String, String> options;
-    private String command;
+    private String[] command;
     private int exitCode;
     private String out;
     private String err;
     private String directory;
     private int elapsedTime;    // in millisecond
 
-    public YoutubeDLResponse(String command, Map<String, String> options, String directory, int exitCode, int elapsedTime, String out, String err) {
+    public YoutubeDLResponse(String[] command, Map<String, String> options, String directory, int exitCode, int elapsedTime, String out, String err) {
         this.command = command;
         this.options = options;
         this.directory = directory;
@@ -29,7 +29,7 @@ public class YoutubeDLResponse {
         return exitCode <= 0;
     }
 
-    public String getCommand() {
+    public String[] getCommand() {
         return command;
     }
 

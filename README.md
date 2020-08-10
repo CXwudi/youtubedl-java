@@ -2,8 +2,14 @@
 
 A simple java wrapper for [youtube-dl](https://github.com/rg3/youtube-dl) executable
 
-This youtube-dl is forked from [main stream](https://github.com/sapher/youtubedl-java) 
-with modification to give users an option to write their own custom output parsing code
+## Modification
+This youtubedl-java is forked from [main stream](https://github.com/sapher/youtubedl-java) 
+with the following modification: 
+
+1. give users an option to write their own custom stdout parsing code, by implementing the
+[LineOutputCallback](src\main\java\com\sapher\youtubedl\callback\LineOutputCallback.java) interface
+2. setting global default youtube-dl executable path
+3. setting another youtube-dl executable path for a single youtube-dl request
 
 ## Prerequisite
 
@@ -11,13 +17,13 @@ with modification to give users an option to write their own custom output parsi
 
 [How to properly install YoutubeDL executable](https://rg3.github.io/youtube-dl/download.html)
 
-Otherwise, please set your own youtube-dl executable file path through `YoutubeDL.setExecutablePath(yourExePath)`.
+Otherwise, please set your own youtube-dl executable file path through `YoutubeDL.setDefaultExecutablePath(yourExePath)`.
 
 Otherwise, you will get this error :
 
 `Cannot run program "youtube-dl" (in directory "/Users/my/beautiful/path"): error=2, No such file or directory`
 
-Since version 1.2+, *Java 11 is required*
+Since version 1.2+, Java 11 **is required**
 
 ## Usage
 
@@ -58,9 +64,9 @@ String directory = System.getProperty("user.home");
 
 // Build request
 YoutubeDLRequest request = new YoutubeDLRequest(videoUrl, directory);
-request.setOption("ignore-errors");		// --ignore-errors
-request.setOption("output", "%(id)s");	// --output "%(id)s"
-request.setOption("retries", 10);		// --retries 10
+request.setOption("--ignore-errors");		// --ignore-errors
+request.setOption("--output", "%(id)s");	// --output "%(id)s"
+request.setOption("--retries", 10);		// --retries 10
 
 // Make request and return response
 YoutubeDLResponse response = YoutubeDL.execute(request);

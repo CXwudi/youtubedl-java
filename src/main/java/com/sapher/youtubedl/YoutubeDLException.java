@@ -6,32 +6,22 @@ package com.sapher.youtubedl;
 public class YoutubeDLException extends Exception {
 
     /**
-     * Exception message
-     */
-    private String message;
-
-    /**
      * Construct YoutubeDLException with a message
      * @param message
      */
     public YoutubeDLException(String message) {
-        this.message = message;
+        super(message);
     }
 
     /**
      * Construct YoutubeDLException from another exception
      * @param e Any exception
      */
-    public YoutubeDLException(Exception e) {
-        message = e.getMessage();
+    public YoutubeDLException(Throwable e) {
+        super(e);
     }
 
-    /**
-     * Get exception message
-     * @return exception message
-     */
-    @Override
-    public String getMessage() {
-        return message;
+    public YoutubeDLException(String message, Throwable e){
+        super(message, e);
     }
 }

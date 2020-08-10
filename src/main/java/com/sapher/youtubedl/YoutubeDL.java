@@ -50,20 +50,16 @@ public class YoutubeDL {
                                             LineOutputCallback stdOutCallback,
                                             LineOutputCallback stdErrCallback) throws YoutubeDLException {
 
-        String command = request.buildCommand();
+        String[] command = request.buildCommand();
         String directory = request.getDirectory();
-        Map<String, String> options = request.getOption();
 
-        YoutubeDLResponse youtubeDLResponse;
         Process process;
         int exitCode;
         StringBuilder outBuffer = new StringBuilder(); //stdout
         StringBuilder errBuffer = new StringBuilder(); //stderr
         long startTime = System.nanoTime();
 
-        String[] split = command.split(" ");
-
-        ProcessBuilder processBuilder = new ProcessBuilder(split);
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
 
         // Define directory if one is passed
         if(directory != null) {
@@ -87,7 +83,6 @@ public class YoutubeDL {
             stdErrProcessor.join();
             exitCode = process.waitFor();
         } catch (InterruptedException e) {
-
             // process exited for some reason
             throw new YoutubeDLException(e);
         }
@@ -102,9 +97,8 @@ public class YoutubeDL {
 
         int elapsedTime = (int) ((System.nanoTime() - startTime) / 1000000);
 
-        youtubeDLResponse = new YoutubeDLResponse(command, options, directory, exitCode , elapsedTime, out, err);
+        return new YoutubeDLResponse(command, request.getOption(), directory, exitCode , elapsedTime, out, err);
 
-        return youtubeDLResponse;
     }
 
 
@@ -115,7 +109,7 @@ public class YoutubeDL {
      */
     public static String getVersion() throws YoutubeDLException {
         YoutubeDLRequest request = new YoutubeDLRequest();
-        request.setOption("version");
+        request.setOption("--version");
         return YoutubeDL.execute(request).getOut();
     }
 
@@ -129,8 +123,8 @@ public class YoutubeDL {
 
         // Build request
         YoutubeDLRequest request = new YoutubeDLRequest(url);
-        request.setOption("dump-json");
-        request.setOption("no-playlist");
+        request.setOption("--dump-json");
+        request.setOption("--no-playlist");
         YoutubeDLResponse response = YoutubeDL.execute(request);
 
         // Parse result
@@ -140,7 +134,7 @@ public class YoutubeDL {
         try {
             videoInfo = objectMapper.readValue(response.getOut(), VideoInfo.class);
         } catch (IOException e) {
-            throw new YoutubeDLException("Unable to parse video information: " + e.getMessage());
+            throw new YoutubeDLException("Unable to parse video information: " + e.getMessage(), e);
         }
 
         return videoInfo;
@@ -192,14 +186,14 @@ public class YoutubeDL {
 
     /**
      * Get command executable or path to the executable
-     * @return path string
+     * @return path string, can be "pyhton my/youtube-dl/main.py" as well
      */
     public static String getDefaultExecutablePath(){
         return defaultExecutablePath;
     }
 
     /**
-     * Set path to use for the command
+     * Set path to use for the command, can be "pyhton my/youtube-dl/main.py" as well
      * @param path String path to the executable
      */
     public static void setDefaultExecutablePath(String path){
