@@ -4,15 +4,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class YoutubeDLRequestTest {
 
+    private final String youtubeDlExe = "youtube-dl";
+
     @Before
     public void setDefaultExe(){
-        if (!YoutubeDL.getDefaultExecutablePath().equals("youtube-dl")) {
-            YoutubeDL.setDefaultExecutablePath("youtube-dl");
+        if (!YoutubeDL.getDefaultExecutablePath().equals(youtubeDlExe)) {
+            YoutubeDL.setDefaultExecutablePath(youtubeDlExe);
         }
     }
 
@@ -22,7 +23,7 @@ public class YoutubeDLRequestTest {
         YoutubeDLRequest request = new YoutubeDLRequest();
         request.setOption("--help");
 
-        Assert.assertArrayEquals(new String[]{"youtube-dl","--help"} , request.buildCommand());
+        Assert.assertArrayEquals(new String[]{youtubeDlExe,"--help"} , request.buildCommand(youtubeDlExe));
     }
 
     @Test
@@ -31,7 +32,7 @@ public class YoutubeDLRequestTest {
         YoutubeDLRequest request = new YoutubeDLRequest();
         request.setOption("--help", " ");
 
-        Assert.assertArrayEquals(new String[]{"youtube-dl","--help"} , request.buildCommand());
+        Assert.assertArrayEquals(new String[]{youtubeDlExe,"--help"} , request.buildCommand(youtubeDlExe));
     }
 
     @Test
@@ -40,7 +41,7 @@ public class YoutubeDLRequestTest {
         YoutubeDLRequest request = new YoutubeDLRequest();
         request.setOption("--password", "1234");
 
-        Assert.assertArrayEquals(new String[]{"youtube-dl","--password","1234"}, request.buildCommand());
+        Assert.assertArrayEquals(new String[]{youtubeDlExe,"--password","1234"}, request.buildCommand(youtubeDlExe));
     }
 
     @Test
@@ -50,7 +51,7 @@ public class YoutubeDLRequestTest {
         request.setOption("--password", "1234");
         request.setOption("--username", "1234");
 
-        Assert.assertArrayEquals(new String[]{"youtube-dl","--password","1234","--username","1234"}, request.buildCommand());
+        Assert.assertArrayEquals(new String[]{youtubeDlExe,"--password","1234","--username","1234"}, request.buildCommand(youtubeDlExe));
     }
 
     @Test
@@ -62,7 +63,7 @@ public class YoutubeDLRequestTest {
         map.put("--username", "1234");
         request.setOptions(map);
 
-        Assert.assertArrayEquals(new String[]{"youtube-dl","--password","1234","--username","1234"}, request.buildCommand());
+        Assert.assertArrayEquals(new String[]{youtubeDlExe,"--password","1234","--username","1234"}, request.buildCommand(youtubeDlExe));
     }
 
     @Test
@@ -77,9 +78,19 @@ public class YoutubeDLRequestTest {
 
         request.setOptions(map);
 
-        Assert.assertArrayEquals(new String[]{"youtube-dl","--password","1234","--username","1234"}, request.buildCommand());
+        Assert.assertArrayEquals(new String[]{youtubeDlExe,"--password","1234","--username","1234"}, request.buildCommand(youtubeDlExe));
     }
 
+    @Test
+    public void testBuildingNormalDownload(){
+        String url = "https://www.youtube.com/watch?v=AufydOsiD6M";
+        YoutubeDLRequest request = new YoutubeDLRequest();
+        request.setUrl(url);
+        request.setOption("--simulate");
+
+        Assert.assertArrayEquals(new String[]{youtubeDlExe, url, "--simulate"}, request.buildCommand(youtubeDlExe));
+
+    }
 
     @Test
     public void testUsingOwnExecutablePathForOneRequest() {
@@ -95,6 +106,13 @@ public class YoutubeDLRequestTest {
         request.setOption("--version");
         request.setYoutubedlPath("python some/other/path");
         Assert.assertNotEquals(YoutubeDL.getDefaultExecutablePath(), request.getYoutubedlPath());
-        Assert.assertEquals(3, request.buildCommand().length);
+        Assert.assertEquals(3, request.buildCommand(youtubeDlExe).length);
+    }
+
+    @Test
+    public void testConstructingRequestVerbose(){
+        YoutubeDLRequest request = new YoutubeDLRequest("", " ", " ");
+        Assert.assertNull(request.getDirectory());
+        Assert.assertNull(request.getYoutubedlPath());
     }
 }

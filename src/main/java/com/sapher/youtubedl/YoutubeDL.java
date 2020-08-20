@@ -50,7 +50,7 @@ public class YoutubeDL {
                                             LineOutputCallback stdOutCallback,
                                             LineOutputCallback stdErrCallback) throws YoutubeDLException {
 
-        String[] command = request.buildCommand();
+        String[] command = request.buildCommand(defaultExecutablePath);
         String directory = request.getDirectory();
 
         Process process;

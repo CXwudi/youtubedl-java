@@ -19,7 +19,7 @@ public class YoutubeDLRequest {
 
     /**
      * The customized youtube-dl executable path for this request only, default is {@code null}.
-     * When calling {@link YoutubeDLRequest#buildCommand()},
+     * When calling {@link YoutubeDLRequest#buildCommand(String defaultYoutubeDlPath)},
      * {@code null} will be replaced by {@link YoutubeDL#getDefaultExecutablePath()}.
      * Otherwise, it stay the same
      */
@@ -36,6 +36,9 @@ public class YoutubeDLRequest {
 
     public YoutubeDLRequest setDirectory(String directory) {
         this.directory = directory;
+        if (this.directory != null && "".equals(this.directory.trim())){
+            this.directory = null;
+        }
         return this;
     }
 
@@ -54,6 +57,9 @@ public class YoutubeDLRequest {
 
     public YoutubeDLRequest setYoutubedlPath(String youtubedlPath) {
         this.youtubedlPath = youtubedlPath;
+        if (this.youtubedlPath != null && "".equals(this.youtubedlPath.trim())){
+            this.youtubedlPath = null;
+        }
         return this;
     }
 
@@ -127,16 +133,18 @@ public class YoutubeDLRequest {
     }
 
     public YoutubeDLRequest(String url, String directory, String youtubedlPath) {
-        this.url = url;
-        this.directory = directory;
-        this.youtubedlPath = youtubedlPath;
+        setUrl(url);
+        setDirectory(directory);
+        setYoutubedlPath(youtubedlPath);
     }
 
     /**
      * Transform options to a string and build a completed working command line
+     * with a default youtube-dl exe path if this request doesn't define a custom one
+     * @param defaultYoutubeDlPath The default youtube-dl exe path
      * @return Command string
      */
-    public String[] buildCommand() {
+    public String[] buildCommand(String defaultYoutubeDlPath) {
 
         List<String> builder = new LinkedList<>();
 
@@ -145,12 +153,19 @@ public class YoutubeDLRequest {
         if (youtubedlPath != null) {
             executablePath = youtubedlPath;
         } else {
-
-            executablePath = YoutubeDL.getDefaultExecutablePath();
+            executablePath = defaultYoutubeDlPath;
         }
 
-        // consider user might set executable path like "python.exe youtube_dl/__main__.py"
-        builder.addAll(Arrays.asList(executablePath.split(" ")));
+        // consider user might set executable path like "python.exe my/beautiful path/youtube_dl/__main__.py"
+        if (executablePath.contains("python")){
+            var firstSpace = executablePath.indexOf(' ');
+            var pythonExe = executablePath.substring(0, firstSpace);
+            var rest = executablePath.substring(firstSpace + 1);
+            builder.add(pythonExe);
+            builder.add(rest);
+        } else {
+            builder.add(executablePath);
+        }
 
         // Set Url
         if(url != null) {

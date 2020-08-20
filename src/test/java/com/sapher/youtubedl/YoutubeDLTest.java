@@ -25,7 +25,7 @@ public class YoutubeDLTest {
     @Before
     public void setDefaultExe() {
         //YoutubeDL.setDefaultExecutablePath("D:\\11134\\Videos\\youtube-dl-niconico-enhanced.exe");
-        YoutubeDL.setDefaultExecutablePath("python D:\\11134\\Videos\\youtube-dl-niconico-enhanced\\youtube_dl/__main__.py");
+        YoutubeDL.setDefaultExecutablePath("python D:\\11134\\Videos\\Vocaloid Coding POC\\youtube-dl-niconico-enhanced\\youtube_dl/__main__.py");
     }
 
     @Test
@@ -56,11 +56,7 @@ public class YoutubeDLTest {
         request.setOption("--simulate");
 
         YoutubeDLResponse response = YoutubeDL.execute(request);
-
-        List<String> expectedCmd = new ArrayList<>(Arrays.asList(YoutubeDL.getDefaultExecutablePath().split(" ")));
-        expectedCmd.add(VIDEO_URL);
-        expectedCmd.add("--simulate");
-        Assert.assertArrayEquals(expectedCmd.toArray(), response.getCommand());
+        Assert.assertEquals("", response.getErr());
     }
 
     @Test
