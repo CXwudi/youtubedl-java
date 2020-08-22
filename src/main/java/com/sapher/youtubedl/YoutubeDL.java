@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>Provide an interface for youtube-dl executable</p>
@@ -50,7 +49,7 @@ public class YoutubeDL {
                                             LineOutputCallback stdOutCallback,
                                             LineOutputCallback stdErrCallback) throws YoutubeDLException {
 
-        String[] command = request.buildCommand(defaultExecutablePath);
+        String[] command = YoutubeDLCmdBuilder.buildCommand(request, defaultExecutablePath);
         String directory = request.getDirectory();
 
         Process process;

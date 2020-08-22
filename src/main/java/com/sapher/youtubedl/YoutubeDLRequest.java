@@ -1,5 +1,7 @@
 package com.sapher.youtubedl;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 /**
@@ -19,7 +21,7 @@ public class YoutubeDLRequest {
 
     /**
      * The customized youtube-dl executable path for this request only, default is {@code null}.
-     * When calling {@link YoutubeDLRequest#buildCommand(String defaultYoutubeDlPath)},
+     * When calling {@link YoutubeDLCmdBuilder#buildCommand(YoutubeDLRequest, String)},
      * {@code null} will be replaced by {@link YoutubeDL#getDefaultExecutablePath()}.
      * Otherwise, it stay the same
      */
@@ -35,10 +37,7 @@ public class YoutubeDLRequest {
     }
 
     public YoutubeDLRequest setDirectory(String directory) {
-        this.directory = directory;
-        if (this.directory != null && "".equals(this.directory.trim())){
-            this.directory = null;
-        }
+        this.directory = getOrDefault(directory, null);
         return this;
     }
 
@@ -47,7 +46,7 @@ public class YoutubeDLRequest {
     }
 
     public YoutubeDLRequest setUrl(String url) {
-        this.url = url;
+        this.url = getOrDefault(url, null);
         return this;
     }
 
@@ -56,10 +55,7 @@ public class YoutubeDLRequest {
     }
 
     public YoutubeDLRequest setYoutubedlPath(String youtubedlPath) {
-        this.youtubedlPath = youtubedlPath;
-        if (this.youtubedlPath != null && "".equals(this.youtubedlPath.trim())){
-            this.youtubedlPath = null;
-        }
+        this.youtubedlPath = getOrDefault(youtubedlPath, null);
         return this;
     }
 
@@ -73,21 +69,18 @@ public class YoutubeDLRequest {
     }
 
     /**
-     * set the option, if value is empty string after striped,
-     * then {@link YoutubeDLRequest#setOption(String)} is used
+     * set the option
      * @return {@code this}
      */
     public YoutubeDLRequest setOption(String key, String value) {
-        if (value == null || "".equals(value.strip())){
-            options.put(key, null);
-        } else {
-            options.put(key, value);
+        if (StringUtils.isNotBlank(key)){
+            options.put(key, StringUtils.isNotBlank(value) ? value : null);
         }
         return this;
     }
 
     public YoutubeDLRequest setOption(String key, int value) {
-        options.put(key, String.valueOf(value));
+        setOption(key, String.valueOf(value));
         return this;
     }
 
@@ -100,12 +93,13 @@ public class YoutubeDLRequest {
      */
     public YoutubeDLRequest setOptions(Map<String, String> options) {
         for (var entry : options.entrySet()){
-            String key = entry.getKey();
-            if (key != null && !"".equals(key.strip())) {
-                setOption(key, entry.getValue());
-            }
+            setOption(entry.getKey(), entry.getValue());
         }
         return this;
+    }
+
+    private String getOrDefault(String setValue, String defaultValue){
+        return StringUtils.isBlank(setValue) ? defaultValue : setValue;
     }
 
     /**
@@ -136,58 +130,5 @@ public class YoutubeDLRequest {
         setUrl(url);
         setDirectory(directory);
         setYoutubedlPath(youtubedlPath);
-    }
-
-    /**
-     * Transform options to a string and build a completed working command line
-     * with a default youtube-dl exe path if this request doesn't define a custom one
-     * @param defaultYoutubeDlPath The default youtube-dl exe path
-     * @return Command string
-     */
-    public String[] buildCommand(String defaultYoutubeDlPath) {
-
-        List<String> builder = new LinkedList<>();
-
-        // Set youtube-dl exe
-        String executablePath;
-        if (youtubedlPath != null) {
-            executablePath = youtubedlPath;
-        } else {
-            executablePath = defaultYoutubeDlPath;
-        }
-
-        // consider user might set executable path like "python.exe my/beautiful path/youtube_dl/__main__.py"
-        if (executablePath.contains("python")){
-            var firstSpace = executablePath.indexOf(' ');
-            var pythonExe = executablePath.substring(0, firstSpace);
-            var rest = executablePath.substring(firstSpace + 1);
-            builder.add(pythonExe);
-            builder.add(rest);
-        } else {
-            builder.add(executablePath);
-        }
-
-        // Set Url
-        if(url != null) {
-            builder.add(url);
-        }
-
-        // Build options strings
-        Iterator<Map.Entry<String, String>> it = options.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> option = it.next();
-
-            String name = option.getKey();
-            String value = option.getValue();
-
-            builder.add(name);
-            if(value != null && !"".equals(value)) {
-                builder.add(value);
-            }
-
-            it.remove();
-        }
-
-        return builder.toArray(new String[0]);
     }
 }

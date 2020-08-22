@@ -9,6 +9,7 @@ with the following modification:
 1. give users an option to write their own custom stdout parsing code, by implementing the
 [LineOutputCallback](src\main\java\com\sapher\youtubedl\callback\LineOutputCallback.java) interface
 2. setting global default youtube-dl executable path
+    - supporting both exe path or `python __main__.py` path
 3. setting another youtube-dl executable path for a single youtube-dl request
 
 ## Prerequisite
@@ -18,6 +19,13 @@ with the following modification:
 [How to properly install YoutubeDL executable](https://rg3.github.io/youtube-dl/download.html)
 
 Otherwise, please set your own youtube-dl executable file path through `YoutubeDL.setDefaultExecutablePath(yourExePath)`.
+
+`yourExePath` can be one of:
+
+1. just `youtube-dl`
+2. `full/path/to/youtube-dl.exe`
+3. `python3 path/to/youtube-dl/__main__.py`
+4. `'pyth/to/python3.exe' 'path to/youtube-dl/__main__.py'`
 
 Otherwise, you will get this error :
 
@@ -31,7 +39,7 @@ Since version 1.2+, Java 11 **is required**
 
 You can use jitpack.io to add the library to your project.
 
-[youtube-dl](https://jitpack.io/#CXwudi/youtubedl-java)
+[how to use youtubedl-java](https://jitpack.io/#CXwudi/youtubedl-java)
 
 #### Gradle
 
