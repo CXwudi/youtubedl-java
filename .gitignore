@@ -12,6 +12,7 @@
 hs_err_pid*
 
 .idea
+.settings
 *.iml
 
 # No target build for github
@@ -20,3 +21,6 @@ target/
 # Gradle
 .gradle
 gradle
+
+.classpath
+.project
