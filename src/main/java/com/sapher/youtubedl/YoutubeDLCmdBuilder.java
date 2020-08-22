@@ -7,6 +7,7 @@ import java.util.*;
 /**
  * Util class for building command line from {@link YoutubeDLRequest} instance
  * @author CX无敌
+ * @co-author sapher
  */
 public class YoutubeDLCmdBuilder {
 
