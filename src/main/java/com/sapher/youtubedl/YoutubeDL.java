@@ -14,7 +14,11 @@ import java.util.List;
 
 /**
  * <p>Provide an interface for youtube-dl executable</p>
- *
+ * <p>
+ *     All methods are declared as static since they are thread-safe,
+ *     as long as the {@link YoutubeDL#defaultExecutablePath} and the {@link YoutubeDLRequest} instance
+ *     are not modified during the execution of any methods,
+ * </p>
  * <p>
  *     For more information on youtube-dl, please see
  *     <a href="https://github.com/rg3/youtube-dl/blob/master/README.md">YoutubeDL Documentation</a>

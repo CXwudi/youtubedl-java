@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 /**
- * Util class for building command line from {@link YoutubeDLRequest} instance
+ * Util class for building command line from {@link YoutubeDLRequest} instance. <br/>
+ * Functionalities are declared as static because everything is thread-safe,
+ * as long as no modification on {@link YoutubeDLRequest} instance is happening
  * @author CX无敌
  * @co-author sapher
  */
